@@ -66,7 +66,8 @@ This guide will help you set up FreeResend from scratch.
         "iam:DeleteAccessKey",
         "iam:ListAccessKeys",
         "iam:AttachUserPolicy",
-        "iam:DetachUserPolicy"
+        "iam:DetachUserPolicy",
+        "iam:TagUser"
       ],
       "Resource": [
         "arn:aws:iam::*:user/freeresend-smtp-*",
