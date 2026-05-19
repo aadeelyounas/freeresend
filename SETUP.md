@@ -56,6 +56,22 @@ This guide will help you set up FreeResend from scratch.
         "ses:GetIdentityDkimAttributes"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateUser",
+        "iam:DeleteUser",
+        "iam:CreateAccessKey",
+        "iam:DeleteAccessKey",
+        "iam:ListAccessKeys",
+        "iam:AttachUserPolicy",
+        "iam:DetachUserPolicy"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:user/freeresend-smtp-*",
+        "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+      ]
     }
   ]
 }
