@@ -126,10 +126,11 @@ export async function GET(request: NextRequest) {
     );
     const totalCount = parseInt(countResult.rows[0].count);
 
-    // Get email logs with JOINs
+    // Get email logs with JOINs. Bodies and attachments come from /api/emails/[id], one email at a time.
     const emailLogsResult = await query(
       `SELECT 
-        el.*,
+        el.id, el.api_key_id, el.domain_id, el.message_id, el.from_email, el.to_emails, el.cc_emails, el.bcc_emails,
+        el.subject, el.status, el.ses_message_id, el.error_message, el.created_at, el.updated_at,
         d.domain as domain_name,
         ak.key_name as api_key_name
       FROM email_logs el
@@ -147,7 +148,6 @@ export async function GET(request: NextRequest) {
       to_emails: safeParseEmailArray(row.to_emails),
       cc_emails: safeParseEmailArray(row.cc_emails),
       bcc_emails: safeParseEmailArray(row.bcc_emails),
-      attachments: safeParseEmailArray(row.attachments),
       domains: row.domain_name ? { domain: row.domain_name } : null,
       api_keys: row.api_key_name ? { key_name: row.api_key_name } : null,
     }));
