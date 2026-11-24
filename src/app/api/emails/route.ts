@@ -3,6 +3,7 @@ import { z } from "zod";
 import { verifyApiKey } from "@/lib/api-keys";
 import { sendEmail } from "@/lib/ses";
 import { getDomainById } from "@/lib/domains";
+import { formatFromAddress, parseFromAddress } from "@/lib/from-address";
 import { query } from "@/lib/database";
 
 const attachmentSchema = z.object({
@@ -13,7 +14,15 @@ const attachmentSchema = z.object({
 
 const sendEmailSchema = z
   .object({
-    from: z.string().email("Invalid from email"),
+    // `addr` or `Name <addr>`, like Resend.
+    from: z.string().transform((value, ctx) => {
+      const parsed = parseFromAddress(value);
+      if (!parsed) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid from email" });
+        return z.NEVER;
+      }
+      return parsed;
+    }),
     to: z
       .array(z.string().email("Invalid to email"))
       .min(1, "At least one recipient is required"),
@@ -93,7 +102,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate from email domain
-    const fromDomain = from.split("@")[1];
+    const fromDomain = from.email.split("@")[1];
     if (fromDomain !== domain.domain) {
       return cors(NextResponse.json(
         { error: `From email must be from domain: ${domain.domain}` },
@@ -124,7 +133,7 @@ export async function POST(request: NextRequest) {
 
     // Send email via SES
     const messageId = await sendEmail({
-      from,
+      from: formatFromAddress(from),
       to: toArray,
       cc: ccArray,
       bcc: bccArray,
@@ -148,7 +157,7 @@ export async function POST(request: NextRequest) {
         [
           apiKey.id,
           domain.id,
-          from,
+          from.email,
           JSON.stringify(to),
           JSON.stringify(cc || []),
           JSON.stringify(bcc || []),
@@ -167,7 +176,7 @@ export async function POST(request: NextRequest) {
 
     return cors(NextResponse.json({
       id: emailLog?.id || messageId,
-      from,
+      from: formatFromAddress(from),
       to,
       created_at: new Date().toISOString(),
     }));
