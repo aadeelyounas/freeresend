@@ -162,14 +162,14 @@ export default function PricingCalculator({
         amount: selfHostedSavings,
         percentage: comparison.savingsPct,
         option: 'self-hosted',
-        color: 'text-green-600'
+        color: 'text-green-700'
       };
     } else if (hostedSavings > selfHostedSavings && hostedSavings > 0) {
       return {
         amount: hostedSavings,
         percentage: comparison.hostedSavingsPct,
         option: 'hosted',
-        color: 'text-green-600'
+        color: 'text-green-700'
       };
     } else if (Math.max(selfHostedSavings, hostedSavings) > 0) {
       // If they're equal but positive, prefer hosted for simplicity
@@ -177,7 +177,7 @@ export default function PricingCalculator({
         amount: hostedSavings,
         percentage: comparison.hostedSavingsPct,
         option: 'hosted',
-        color: 'text-green-600'
+        color: 'text-green-700'
       };
     } else {
       return { amount: null, percentage: null, option: 'none', color: 'text-gray-500' };
@@ -195,7 +195,7 @@ export default function PricingCalculator({
         <div className="space-y-6">
           {/* Volume Controls */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label htmlFor="calc-volume" className="block text-sm font-medium text-gray-700 mb-3">
               Monthly Email Volume
             </label>
 
@@ -210,9 +210,9 @@ export default function PricingCalculator({
                   min="0"
                   max="5000000"
                   step="1000"
-                  aria-label="Monthly email volume"
+                  id="calc-volume"
                 />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-sm">
                   emails
                 </div>
               </div>
@@ -246,6 +246,8 @@ export default function PricingCalculator({
               {QUICK_PICK_VALUES.map(({ label, value }) => (
                 <button
                   key={value}
+                  type="button"
+                  aria-pressed={volume === value}
                   onClick={() => handleVolumeChange(value)}
                   className={`px-3 py-1 text-sm rounded-md border transition-colors ${volume === value
                     ? 'bg-blue-100 border-blue-300 text-blue-700'
@@ -263,9 +265,9 @@ export default function PricingCalculator({
           {showAdvanced && (
             <div className="border-t border-gray-200 pt-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-700">
+                <h2 className="text-sm font-medium text-gray-700">
                   FreeResend Pricing Parameters
-                </h3>
+                </h2>
                 <button
                   onClick={() => setShowDetails(!showDetails)}
                   className="text-sm text-blue-600 hover:text-blue-700 flex items-center space-x-1"
@@ -279,7 +281,7 @@ export default function PricingCalculator({
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Flat Fee Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="calc-fee" className="block text-sm font-medium text-gray-700 mb-2">
                     Platform Fee (Optional)
                   </label>
                   <div className="relative">
@@ -293,7 +295,7 @@ export default function PricingCalculator({
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="0"
                       step="0.50"
-                      aria-label="Optional platform fee in USD"
+                      id="calc-fee"
                     />
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
@@ -303,7 +305,7 @@ export default function PricingCalculator({
 
                 {/* SES Rate Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="calc-ses" className="block text-sm font-medium text-gray-700 mb-2">
                     SES Rate per 1,000 emails
                   </label>
                   <div className="relative">
@@ -317,14 +319,14 @@ export default function PricingCalculator({
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="0"
                       step="0.01"
-                      aria-label="SES rate per 1000 emails in USD"
+                      id="calc-ses"
                     />
                   </div>
                 </div>
 
                 {/* Hosting Cost Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="calc-hosting" className="block text-sm font-medium text-gray-700 mb-2">
                     Hosting Cost
                   </label>
                   <div className="relative">
@@ -338,14 +340,14 @@ export default function PricingCalculator({
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="0"
                       step="1.00"
-                      aria-label="Monthly hosting cost in USD"
+                      id="calc-hosting"
                     />
                   </div>
                 </div>
 
                 {/* Maintenance Cost Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="calc-maintenance" className="block text-sm font-medium text-gray-700 mb-2">
                     Maintenance Cost
                   </label>
                   <div className="relative">
@@ -359,7 +361,7 @@ export default function PricingCalculator({
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="0"
                       step="1.00"
-                      aria-label="Monthly maintenance cost in USD"
+                      id="calc-maintenance"
                     />
                   </div>
                 </div>
@@ -368,9 +370,9 @@ export default function PricingCalculator({
               {/* Formula Details */}
               {showDetails && (
                 <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">
                     Self-Hosted Cost Breakdown:
-                  </h4>
+                  </h3>
                   <div className="space-y-2 text-sm text-gray-600">
                     {comparison.freeResendBreakdown.flatFee > 0 && (
                       <div className="flex justify-between">
@@ -415,7 +417,7 @@ export default function PricingCalculator({
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center space-x-2 mb-3">
             <DollarSign className="h-5 w-5 text-gray-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Resend</h3>
+            <h2 className="text-lg font-semibold text-gray-900">Resend</h2>
           </div>
 
           <div className="mb-2">
@@ -447,7 +449,7 @@ export default function PricingCalculator({
         <div className="bg-white rounded-lg shadow-sm border border-blue-200 p-6">
           <div className="flex items-center space-x-2 mb-3">
             <Calculator className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Self-Hosted</h3>
+            <h2 className="text-lg font-semibold text-gray-900">Self-Hosted</h2>
           </div>
 
           <div className="mb-2">
@@ -466,12 +468,12 @@ export default function PricingCalculator({
               )}
             </div>
             {comparison.savingsAbs !== null && comparison.savingsAbs > 0 && (
-              <div className="mt-2 text-xs text-green-600 font-medium">
+              <div className="mt-2 text-xs text-green-700 font-medium">
                 Save {formatPercent(comparison.savingsPct!)} vs Resend
               </div>
             )}
             {comparison.savingsAbs !== null && comparison.savingsAbs <= 0 && (
-              <div className="mt-2 text-xs text-orange-600">
+              <div className="mt-2 text-xs text-orange-700">
                 Consider hosted version for better value
               </div>
             )}
@@ -479,13 +481,13 @@ export default function PricingCalculator({
         </div>
 
         {/* FreeResend Hosted Cost */}
-        <div className={`bg-white rounded-lg shadow-sm border p-6 ${waitlistSuccess ? 'border-green-200 bg-green-50' : 'border-purple-200'}`}>
+        <div className={`bg-white rounded-lg shadow-sm border p-6 ${waitlistSuccess ? 'border-green-200 bg-green-50' : 'border-blue-200'}`}>
           <div className="mb-3">
             <div className="flex items-center space-x-2 mb-1">
-              <div className={`h-5 w-5 rounded flex items-center justify-center ${waitlistSuccess ? 'bg-green-600' : 'bg-purple-600'}`}>
+              <div className={`h-5 w-5 rounded flex items-center justify-center ${waitlistSuccess ? 'bg-green-600' : 'bg-blue-600'}`}>
                 <span className="text-white text-xs font-bold">H</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">Hosted</h3>
+              <h2 className="text-lg font-semibold text-gray-900">Hosted</h2>
             </div>
             {waitlistSuccess && (
               <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
@@ -493,14 +495,14 @@ export default function PricingCalculator({
               </span>
             )}
             {!waitlistSuccess && comparison.hostedTier.recommended && (
-              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
                 Recommended
               </span>
             )}
           </div>
 
           <div className="mb-2">
-            <span className={`text-3xl font-bold ${waitlistSuccess ? 'text-green-600' : 'text-purple-600'}`}>
+            <span className={`text-3xl font-bold ${waitlistSuccess ? 'text-green-700' : 'text-blue-600'}`}>
               {formatUSD(comparison.hostedCost)}
             </span>
           </div>
@@ -508,18 +510,18 @@ export default function PricingCalculator({
           <div className="text-sm text-gray-500">
             <div className="mb-1">
               {volume <= 3000 ? (
-                <span className="text-green-600 font-medium">Free service + SES costs</span>
+                <span className="text-green-700 font-medium">Free service + SES costs</span>
               ) : (
                 <span>$15 service fee + {formatUSD((volume / 1000) * sesRate)} SES</span>
               )}
             </div>
             {comparison.hostedSavingsAbs !== null && comparison.hostedSavingsAbs > 0 && (
-              <div className="mt-1 text-xs text-green-600">
+              <div className="mt-1 text-xs text-green-700">
                 Save {formatPercent(comparison.hostedSavingsPct!)} vs Resend
               </div>
             )}
             {comparison.hostedSavingsAbs !== null && comparison.hostedSavingsAbs < 0 && (
-              <div className="mt-1 text-xs text-orange-600">
+              <div className="mt-1 text-xs text-orange-700">
                 +{formatPercent(Math.abs(comparison.hostedSavingsPct!))} vs Resend
               </div>
             )}
@@ -529,13 +531,13 @@ export default function PricingCalculator({
                   const waitlistSection = document.querySelector('[data-waitlist-signup]');
                   waitlistSection?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="mt-2 text-xs text-purple-600 hover:text-purple-700 underline"
+                className="mt-2 text-xs text-blue-600 hover:text-blue-700 underline"
               >
                 Join waitlist →
               </button>
             )}
             {waitlistSuccess && (
-              <div className="mt-1 text-xs text-green-600">
+              <div className="mt-1 text-xs text-green-700">
                 You&apos;re on the waitlist! We&apos;ll notify you when it&apos;s ready.
               </div>
             )}
@@ -545,8 +547,8 @@ export default function PricingCalculator({
         {/* Best Savings */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center space-x-2 mb-3">
-            <TrendingDown className={`h-5 w-5 ${hasSavings ? 'text-green-600' : 'text-gray-400'}`} />
-            <h3 className="text-lg font-semibold text-gray-900">Best Savings</h3>
+            <TrendingDown className={`h-5 w-5 ${hasSavings ? 'text-green-700' : 'text-gray-400'}`} />
+            <h2 className="text-lg font-semibold text-gray-900">Best Savings</h2>
           </div>
 
           <div className="mb-2">
@@ -578,17 +580,17 @@ export default function PricingCalculator({
 
       {/* Self-Hosted Reality Check */}
       {!embeddable && (
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg p-6">
+        <div className="mt-8 bg-white rounded-lg p-6">
           <div className="flex items-center space-x-2 mb-4">
             <Calculator className="h-6 w-6 text-blue-600" />
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900">
               Self-Hosted: The Real Costs
-            </h3>
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-gray-900 mb-3">What&apos;s Actually Included</h4>
+              <h3 className="font-medium text-gray-900 mb-3">What&apos;s Actually Included</h3>
               <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex justify-between">
                   <span>VPS Hosting (2-4GB RAM):</span>
@@ -614,7 +616,7 @@ export default function PricingCalculator({
                   <span>Infrastructure Total:</span>
                   <span>{formatUSD(hostingCost + maintenanceCost)}/month</span>
                 </div>
-                <div className="flex justify-between text-green-600 font-medium">
+                <div className="flex justify-between text-green-700 font-medium">
                   <span>Platform Fee (Open Source):</span>
                   <span>FREE</span>
                 </div>
@@ -622,7 +624,7 @@ export default function PricingCalculator({
             </div>
 
             <div>
-              <h4 className="font-medium text-gray-900 mb-3">Hidden Costs to Consider</h4>
+              <h3 className="font-medium text-gray-900 mb-3">Hidden Costs to Consider</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start space-x-2">
                   <div className="h-1.5 w-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -660,16 +662,16 @@ export default function PricingCalculator({
 
       {/* Hosted Tier Details */}
       {!embeddable && (
-        <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
+        <div className="mt-8 bg-white rounded-lg p-6">
           <div className="flex items-center space-x-2 mb-4">
-            <div className="h-6 w-6 bg-purple-600 rounded flex items-center justify-center">
+            <div className="h-6 w-6 bg-blue-600 rounded flex items-center justify-center">
               <span className="text-white text-sm font-bold">H</span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900">
               Hosted Version: {comparison.hostedTier.name} Tier
-            </h3>
+            </h2>
             {comparison.hostedTier.recommended && (
-              <span className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
+              <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                 Recommended
               </span>
             )}
@@ -677,14 +679,14 @@ export default function PricingCalculator({
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Pricing Breakdown</h4>
+              <h3 className="font-medium text-gray-900 mb-2">Pricing Breakdown</h3>
               <div className="space-y-1 text-sm text-gray-600">
-                <div>First 3,000 emails: <span className="text-green-600 font-medium">Free</span></div>
-                <div>After 3,000 emails: <span className="text-purple-600 font-medium">$15/month flat fee</span></div>
+                <div>First 3,000 emails: <span className="text-green-700 font-medium">Free</span></div>
+                <div>After 3,000 emails: <span className="text-blue-600 font-medium">$15/month flat fee</span></div>
                 <div>SES costs: <span className="text-blue-600">You pay Amazon directly</span></div>
                 {volume > comparison.hostedTier.includedEmails && (
-                  <div className="mt-2 p-2 bg-purple-50 rounded border border-purple-200">
-                    <div className="text-purple-700 font-medium text-sm">
+                  <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
+                    <div className="text-blue-700 font-medium text-sm">
                       Your cost: $15/month service fee + SES costs
                     </div>
                   </div>
@@ -700,11 +702,11 @@ export default function PricingCalculator({
             </div>
 
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Features</h4>
+              <h3 className="font-medium text-gray-900 mb-2">Features</h3>
               <ul className="space-y-1 text-sm text-gray-600">
                 {comparison.hostedTier.features.map((feature, index) => (
                   <li key={index} className="flex items-center space-x-2">
-                    <div className="h-1.5 w-1.5 bg-purple-600 rounded-full"></div>
+                    <div className="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -713,12 +715,12 @@ export default function PricingCalculator({
           </div>
 
           {showWaitlist && (
-            <div className="mt-6 bg-white rounded-lg border border-purple-200 overflow-hidden" data-waitlist-signup>
-              <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4">
-                <h4 className="text-lg font-semibold text-white">
+            <div className="mt-6 bg-white rounded-lg border border-blue-200 overflow-hidden" data-waitlist-signup>
+              <div className="bg-blue-600 px-6 py-4">
+                <h3 className="text-lg font-semibold text-white">
                   Get Early Access to Hosted Version
-                </h4>
-                <p className="text-purple-100 text-sm mt-1">
+                </h3>
+                <p className="text-white text-sm mt-1">
                   Join the waitlist and be the first to know when it launches
                 </p>
               </div>
@@ -745,7 +747,7 @@ export default function PricingCalculator({
           )}
 
           {!showWaitlist && (
-            <div className="mt-4 p-4 bg-white rounded-lg border border-purple-200">
+            <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
               <div className="text-sm text-gray-600">
                 <strong>Coming Soon:</strong> The hosted version is currently in development.
                 Join our waitlist to be notified when it becomes available and get early access pricing.
