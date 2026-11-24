@@ -5,20 +5,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { inputClass, labelClass, primaryButton } from "./ui/styles";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Read from the form: a password manager can fill it before React is ready, so state would miss the values.
+    const form = new FormData(e.currentTarget);
     setLoading(true);
     setError("");
 
     try {
-      await login(email, password);
+      await login(String(form.get("email")), String(form.get("password")));
     } catch (err: unknown) {
       const errorObj = err as { message?: string };
       setError(errorObj.message || "Login failed");
@@ -34,7 +34,8 @@ export default function LoginForm() {
           <h1 className="text-center text-3xl font-bold text-gray-900">Sign in to FreeResend</h1>
           <p className="mt-2 text-center text-sm text-gray-600">Your self-hosted email service</p>
         </div>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* post: a submit before React is ready must not put the password in the address */}
+        <form method="post" className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className={labelClass}>
               Email address
@@ -46,8 +47,6 @@ export default function LoginForm() {
               autoComplete="email"
               required
               className={`mt-1 ${inputClass}`}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
@@ -61,8 +60,6 @@ export default function LoginForm() {
               autoComplete="current-password"
               required
               className={`mt-1 ${inputClass}`}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 

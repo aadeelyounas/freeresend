@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import LoginForm from "@/components/LoginForm";
 
 export default function LoginPageClient() {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -16,17 +16,7 @@ export default function LoginPageClient() {
     }
   }, [user, router]);
 
-  if (loading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div role="status" className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading FreeResend...</p>
-        </div>
-      </main>
-    );
-  }
-
+  // The form is in the server HTML: waiting for the sign-in check before showing it cost over a second on a slow phone.
   // Don't show login form if user is authenticated (they'll be redirected)
   if (user) {
     return null;
