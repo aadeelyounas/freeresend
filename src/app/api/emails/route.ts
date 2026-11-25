@@ -6,11 +6,19 @@ import { getDomainById } from "@/lib/domains";
 import { formatFromAddress, parseFromAddress } from "@/lib/from-address";
 import { query } from "@/lib/database";
 
+// These end up in the raw message's headers, where a line break would add a header.
+const headerText = (value: string) => value.replace(/[\x00-\x1f\x7f]+/g, " ").trim();
+
 const attachmentSchema = z.object({
-  filename: z.string(),
-  content: z.string(), // Base64 encoded
-  contentType: z.string().optional(),
+  filename: z.string().transform((value) => headerText(value.replace(/["\\]/g, ""))),
+  content: z.string().regex(/^[A-Za-z0-9+/=\r\n]*$/, "Attachment content must be base64"),
+  contentType: z
+    .string()
+    .optional()
+    .transform((value) => (value && /^[\w.+-]+\/[\w.+-]+$/.test(value) ? value : undefined)),
 });
+
+const MAX_RECIPIENTS = 50; // the SES limit
 
 const sendEmailSchema = z
   .object({
@@ -28,7 +36,7 @@ const sendEmailSchema = z
       .min(1, "At least one recipient is required"),
     cc: z.array(z.string().email("Invalid cc email")).optional(),
     bcc: z.array(z.string().email("Invalid bcc email")).optional(),
-    subject: z.string().min(1, "Subject is required"),
+    subject: z.string().transform(headerText).pipe(z.string().min(1, "Subject is required")),
     html: z.string().optional(),
     text: z.string().optional(),
     attachments: z.array(attachmentSchema).optional(),
@@ -37,7 +45,11 @@ const sendEmailSchema = z
   })
   .refine((data) => data.html || data.text, {
     message: "Either html or text content is required",
-  });
+  })
+  .refine(
+    (data) => data.to.length + (data.cc?.length ?? 0) + (data.bcc?.length ?? 0) <= MAX_RECIPIENTS,
+    { message: `At most ${MAX_RECIPIENTS} recipients` }
+  );
 
 function cors(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Origin", "*");
@@ -161,7 +173,7 @@ export async function POST(request: NextRequest) {
           JSON.stringify(to),
           JSON.stringify(cc || []),
           JSON.stringify(bcc || []),
-          subject,
+          subject.slice(0, 500), // the column's length: a longer one was sent but not logged
           html,
           text,
           JSON.stringify(attachments || []),

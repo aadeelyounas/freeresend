@@ -45,8 +45,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100);
+    const page = Math.max(parseInt(searchParams.get("page") || "1") || 1, 1);
+    const limit = Math.min(Math.max(parseInt(searchParams.get("limit") || "50") || 50, 1), 100);
     const domainId = searchParams.get("domain_id");
     const status = searchParams.get("status");
 

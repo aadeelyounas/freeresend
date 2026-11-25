@@ -5,6 +5,9 @@ import type { User } from "./database";
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET!;
 
+// A bcrypt hash, cost 12, of random bytes that were not kept.
+const NO_USER_HASH = "$2a$12$.yMq.AkTUtU0dk2dVLaFt.qf8M0V1YeEdoj5SdPmPnM7Zzqkl/MaS";
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -36,7 +39,7 @@ export function generateJWT(user: AuthUser): string {
 
 export function verifyJWT(token: string): AuthUser | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; name?: string };
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] }) as { id: string; email: string; name?: string };
     return {
       id: decoded.id,
       email: decoded.email,
@@ -83,6 +86,8 @@ export async function authenticateUser(
     ]);
 
     if (result.rows.length === 0) {
+      // As slow as a real check, so the time taken does not say which addresses have an account.
+      await verifyPassword(password, NO_USER_HASH);
       return null;
     }
 

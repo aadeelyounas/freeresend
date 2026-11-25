@@ -61,17 +61,18 @@ export async function createSmtpCredentials(domain: string): Promise<SmtpCredent
   const region = process.env.AWS_REGION || "us-east-1";
   const userName = `freeresend-smtp-${domain.replace(/\./g, "-")}`;
 
-  try {
-    // Create IAM user
-    await iamClient.send(new CreateUserCommand({
-      UserName: userName,
-      Tags: [
-        { Key: "Domain", Value: domain },
-        { Key: "Service", Value: "FreeResend" },
-        { Key: "Purpose", Value: "SMTP" }
-      ]
-    }));
+  // Create IAM user. Outside the try: when the name is taken (a-b.com and a.b.com share one), cleaning up would delete the
+  // user that already has it.
+  await iamClient.send(new CreateUserCommand({
+    UserName: userName,
+    Tags: [
+      { Key: "Domain", Value: domain },
+      { Key: "Service", Value: "FreeResend" },
+      { Key: "Purpose", Value: "SMTP" }
+    ]
+  }));
 
+  try {
     // Attach SES sending policy
     await iamClient.send(new AttachUserPolicyCommand({
       UserName: userName,
@@ -101,7 +102,7 @@ export async function createSmtpCredentials(domain: string): Promise<SmtpCredent
       domain
     };
   } catch (error) {
-    // If user creation fails, try to clean up
+    // If a later step fails, try to clean up
     try {
       await deleteSmtpCredentials(domain);
     } catch {
@@ -149,8 +150,10 @@ export async function deleteSmtpCredentials(domain: string): Promise<void> {
       UserName: userName
     }));
   } catch (error) {
-    // User might not exist
+    // Already gone. Any other failure means the credentials may still work, so the caller must know.
+    if ((error as { name?: string }).name === "NoSuchEntityException") return;
     console.error("Error deleting SMTP credentials:", error);
+    throw error;
   }
 }
 

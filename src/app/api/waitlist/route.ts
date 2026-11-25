@@ -7,7 +7,7 @@ import {
   getWaitlistAnalytics,
   type CreateWaitlistSignupData,
 } from "@/lib/database";
-import { handleError } from "@/lib/middleware";
+import { handleError, withAuth } from "@/lib/middleware";
 import { sendWaitlistNotification, sendWelcomeEmail } from "@/lib/notifications";
 
 // Validation schema for waitlist signup
@@ -162,7 +162,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  return handleGet(req);
+  return withAuth(handleGet)(req);
 }
 
 // Handle OPTIONS for CORS

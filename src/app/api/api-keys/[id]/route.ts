@@ -5,7 +5,8 @@ import { deleteApiKey, updateApiKeyPermissions } from "@/lib/api-keys";
 
 const updateApiKeySchema = z.object({
   permissions: z
-    .array(z.string())
+    .array(z.enum(["send", "receive", "webhooks"]))
+    .max(3)
     .min(1, "At least one permission is required"),
 });
 

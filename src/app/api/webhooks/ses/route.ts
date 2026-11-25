@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/database";
+import { verifySnsMessage } from "@/lib/sns";
 
 interface SESMessage {
   eventType: "send" | "delivery" | "bounce" | "complaint" | "reject";
@@ -39,13 +40,16 @@ interface SESMessage {
 
 async function handleSESWebhook(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await verifySnsMessage(await req.json().catch(() => null));
+    if (!body) {
+      return NextResponse.json({ error: "Not a signed message from our SNS topic" }, { status: 403 });
+    }
 
     // Handle SNS confirmation
     if (body.Type === "SubscriptionConfirmation") {
       console.log("SNS Subscription confirmation received");
       // You would typically confirm the subscription here
-      return NextResponse.json({ message: "Subscription confirmed" });
+      return NextResponse.json({ message: "Subscription confirmation received" });
     }
 
     // Handle SNS notification
@@ -71,7 +75,7 @@ async function processSESEvent(message: SESMessage) {
   try {
     // Find the email log by SES message ID
     const emailResult = await query(
-      "SELECT * FROM email_logs WHERE ses_message_id = $1 LIMIT 1",
+      "SELECT id, status FROM email_logs WHERE ses_message_id = $1 LIMIT 1",
       [message.mail.messageId]
     );
 
@@ -82,13 +86,7 @@ async function processSESEvent(message: SESMessage) {
       return;
     }
 
-    const emailLog = {
-      ...emailResult.rows[0],
-      to_emails: JSON.parse(emailResult.rows[0].to_emails || "[]"),
-      cc_emails: JSON.parse(emailResult.rows[0].cc_emails || "[]"),
-      bcc_emails: JSON.parse(emailResult.rows[0].bcc_emails || "[]"),
-      attachments: JSON.parse(emailResult.rows[0].attachments || "[]"),
-    };
+    const emailLog = emailResult.rows[0];
 
     // Update email status based on event type
     let newStatus = emailLog.status;

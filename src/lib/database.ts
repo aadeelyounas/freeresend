@@ -12,6 +12,9 @@ const pool = new Pool({
   connectionTimeoutMillis: 5000, // Return an error after 5 seconds if connection could not be established
 });
 
+// Without a listener, a dropped idle connection is an uncaught error and ends the process
+pool.on("error", (error) => console.error("Idle database connection failed:", error.message));
+
 // Export the pool for direct access if needed
 export { pool as db };
 
