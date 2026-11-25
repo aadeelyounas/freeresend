@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "crypto";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import { query } from "./database";
@@ -68,6 +69,21 @@ export async function generateApiKey(
   }
 }
 
+// bcrypt costs about 60 ms of CPU, on every send. A key that passed it once is remembered by its SHA-256 against the
+// stored hash it matched. The row is still read on every call, so a deleted or changed key and changed permissions take
+// effect at once; a wrong key is never remembered.
+const verifiedKeys = new Map<string, { keyHash: string; digest: Buffer }>();
+
+async function matchesHash(apiKey: string, id: string, keyHash: string): Promise<boolean> {
+  const digest = createHash("sha256").update(apiKey).digest();
+  const known = verifiedKeys.get(id);
+  if (known && known.keyHash === keyHash && timingSafeEqual(known.digest, digest)) return true;
+
+  const isValid = await bcrypt.compare(apiKey, keyHash);
+  if (isValid) verifiedKeys.set(id, { keyHash, digest });
+  return isValid;
+}
+
 export async function verifyApiKey(apiKey: string): Promise<ApiKey | null> {
   // Extract prefix for efficient lookup
   // Split only on the first two underscores to handle underscores in the secret part
@@ -99,7 +115,7 @@ export async function verifyApiKey(apiKey: string): Promise<ApiKey | null> {
 
     // Verify the full key against each possible match
     for (const key of result.rows) {
-      const isValid = await bcrypt.compare(apiKey, key.key_hash);
+      const isValid = await matchesHash(apiKey, key.id, key.key_hash);
       if (isValid) {
         // Update last used timestamp
         await query("UPDATE api_keys SET last_used_at = NOW() WHERE id = $1", [

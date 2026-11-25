@@ -10,11 +10,11 @@ export async function POST() {
       message: "Default user initialized successfully",
     });
   } catch (error: unknown) {
-    const errorObj = error as { message?: string };
+    console.error("Setup failed:", error);
     return NextResponse.json(
       {
         success: false,
-        error: errorObj.message,
+        error: "Setup failed",
       },
       { status: 500 }
     );

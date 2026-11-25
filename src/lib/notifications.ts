@@ -1,5 +1,8 @@
 import { sendEmail } from "./ses";
 
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
 export interface WaitlistNotificationData {
   email: string;
   estimatedVolume?: number;
@@ -76,7 +79,7 @@ export async function sendWaitlistNotification(data: WaitlistNotificationData): 
           <div class="signup-info">
             <div class="info-row">
               <span class="label">Email:</span>
-              <span class="value highlight">${data.email}</span>
+              <span class="value highlight">${escapeHtml(data.email)}</span>
             </div>
             <div class="info-row">
               <span class="label">Expected Volume:</span>
@@ -84,11 +87,11 @@ export async function sendWaitlistNotification(data: WaitlistNotificationData): 
             </div>
             <div class="info-row">
               <span class="label">Current Provider:</span>
-              <span class="value">${data.currentProvider || "Not specified"}</span>
+              <span class="value">${escapeHtml(data.currentProvider || "Not specified")}</span>
             </div>
             <div class="info-row">
               <span class="label">Referral Source:</span>
-              <span class="value">${data.referralSource || "Not specified"}</span>
+              <span class="value">${escapeHtml(data.referralSource || "Not specified")}</span>
             </div>
             <div class="info-row">
               <span class="label">Signup Time:</span>
@@ -97,7 +100,7 @@ export async function sendWaitlistNotification(data: WaitlistNotificationData): 
             ${utmInfo ? `
             <div class="info-row">
               <span class="label">UTM Parameters:</span>
-              <span class="value">${utmInfo}</span>
+              <span class="value">${escapeHtml(utmInfo)}</span>
             </div>
             ` : ''}
           </div>
@@ -124,7 +127,7 @@ export async function sendWaitlistNotification(data: WaitlistNotificationData): 
             <ul style="margin: 0; padding-left: 20px; color: #92400e;">
               <li>Review their expected volume for pricing tier planning</li>
               <li>Consider reaching out if they're a high-volume user</li>
-              <li>Track conversion from ${data.currentProvider || 'unknown provider'}</li>
+              <li>Track conversion from ${escapeHtml(data.currentProvider || 'unknown provider')}</li>
             </ul>
           </div>
         </div>

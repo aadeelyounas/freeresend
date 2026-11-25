@@ -12,6 +12,7 @@ import {
   verifyDomainOwnership,
   type DODomainRecord,
 } from "./digitalocean";
+import { deleteSmtpCredentials } from "./smtp";
 import type { Domain } from "./database";
 
 export interface DNSRecord {
@@ -480,6 +481,11 @@ export async function deleteDomain(
   try {
     // Delete from SES (if needed)
     // await deleteDomainIdentity(domain.domain)
+
+    // End the SMTP credentials first: once the record is gone, nothing here can list or end them
+    if (domain.smtp_credentials) {
+      await deleteSmtpCredentials(domain.domain);
+    }
 
     // Delete API keys associated with this domain
     await query("DELETE FROM api_keys WHERE domain_id = $1", [domainId]);

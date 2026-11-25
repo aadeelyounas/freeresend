@@ -130,11 +130,5 @@ CREATE TRIGGER update_email_logs_updated_at BEFORE UPDATE ON email_logs
 CREATE TRIGGER update_waitlist_signups_updated_at BEFORE UPDATE ON waitlist_signups 
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Initial data: Create default admin user (password: changeme123)
--- Note: Change this password after first login!
-INSERT INTO users (email, password_hash, name) 
-VALUES (
-  'admin@freeresend.com', 
-  '$2b$10$rHOuGCOB2xzvf1YqnHjlUuB9AKnp.xeL0JOV5E7zlM1QIFhW7qYGS', 
-  'Admin User'
-) ON CONFLICT (email) DO NOTHING;
+-- The admin user comes from ADMIN_EMAIL and ADMIN_PASSWORD (POST /api/setup). None is created here: a password hash in a
+-- public file would be the same on every installation.

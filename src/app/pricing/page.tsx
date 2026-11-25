@@ -19,12 +19,12 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto py-12 px-4">
+    <div className="min-h-screen bg-gray-50">
+      <main className="container mx-auto py-12 px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Pricing <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Calculator</span>
+            Pricing <span className="text-blue-600">Calculator</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Compare Resend vs FreeResend costs for your email volume. 
@@ -38,36 +38,36 @@ export default function PricingPage() {
         {/* Key Benefits */}
         <div className="mt-16 grid md:grid-cols-3 gap-8">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">💰</span>
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span aria-hidden="true" className="text-2xl">💰</span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
               Up to 85% Savings
-            </h3>
+            </h2>
             <p className="text-gray-600">
               Pay Amazon SES rates instead of premium pricing. Save hundreds annually.
             </p>
           </div>
 
           <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">⚡</span>
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span aria-hidden="true" className="text-2xl">⚡</span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
               One-Line Migration
-            </h3>
+            </h2>
             <p className="text-gray-600">
               Just update your environment variable. Zero code changes required.
             </p>
           </div>
 
           <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🏠</span>
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span aria-hidden="true" className="text-2xl">🏠</span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
               Complete Control
-            </h3>
+            </h2>
             <p className="text-gray-600">
               Self-hosted solution with your own AWS infrastructure and domain.
             </p>
@@ -75,11 +75,11 @@ export default function PricingPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+        <div className="mt-16 text-center bg-blue-600 rounded-lg p-8 text-white">
           <h2 className="text-3xl font-bold mb-4">
             Ready to Start Saving?
           </h2>
-          <p className="text-xl text-blue-100 mb-6">
+          <p className="text-xl text-white mb-6">
             Get started with FreeResend in under 5 minutes
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -114,7 +114,7 @@ export default function PricingPage() {
               <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex justify-between">
                   <span>0 - 3,000 emails</span>
-                  <span className="font-medium text-green-600">Free</span>
+                  <span className="font-medium text-green-700">Free</span>
                 </div>
                 <div className="flex justify-between">
                   <span>3,001 - 50,000 emails</span>
@@ -217,7 +217,7 @@ export default function PricingPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Can I self-host it?
                 </h3>
-                <p className="text-gray-600 text-small">
+                <p className="text-gray-600 text-sm">
                   Absolutely! FreeResend is designed for self-hosting with Docker, 
                   Vercel, or any Node.js hosting platform.
                 </p>
@@ -225,7 +225,7 @@ export default function PricingPage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

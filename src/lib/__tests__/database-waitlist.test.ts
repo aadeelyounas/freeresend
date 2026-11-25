@@ -13,6 +13,7 @@ jest.mock('pg', () => {
   const mockPool = {
     connect: jest.fn().mockResolvedValue(mockClient),
     end: jest.fn(),
+    on: jest.fn(),
   };
 
   return {

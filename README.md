@@ -52,6 +52,9 @@ Edit `.env.local` with your configuration:
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-super-secret-jwt-key-here
 
+# Delivery events (optional): the SNS topic whose signed messages /api/webhooks/ses accepts. Without it, none are.
+SNS_TOPIC_ARN=arn:aws:sns:eu-west-2:123456789012:ses-events
+
 # Database Configuration (PostgreSQL)
 DATABASE_URL=postgresql://username:password@hostname:port/database
 

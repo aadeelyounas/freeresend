@@ -28,18 +28,18 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex flex-wrap justify-between items-center gap-y-2 py-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <EnvelopeIcon className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <p className="text-2xl font-bold text-blue-600">
                 FreeResend
-              </h1>
+              </p>
             </div>
             <div className="flex items-center space-x-4">
               <a
@@ -48,8 +48,8 @@ export default function LandingPage() {
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <Github className="h-5 w-5" />
-                <span className="hidden sm:inline">GitHub</span>
+                <Github className="h-5 w-5" aria-hidden="true" />
+                <span className="sr-only sm:not-sr-only">GitHub</span>
               </a>
               <Link
                 href="/login"
@@ -69,23 +69,24 @@ export default function LandingPage() {
         </div>
       </header>
 
+      <main>
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex justify-center mb-8">
             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-              🎉 Now Open Source • MIT License
+              Now Open Source • MIT License
             </div>
           </div>
 
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             The{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-blue-600">
               Self-Hosted
             </span>
             <br />
             Alternative to Resend
-          </h2>
+          </h1>
 
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             100% API compatible • 85% cost savings • Complete control over your
@@ -128,17 +129,17 @@ export default function LandingPage() {
           </div>
 
           {/* Pricing Teaser */}
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 mb-12 max-w-4xl mx-auto">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-12 max-w-4xl mx-auto">
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                🚀 Hosted Version Coming Soon
-              </h3>
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                Hosted Version Coming Soon
+              </h2>
               <p className="text-gray-600 mb-4">
                 Skip the setup and let us handle the infrastructure. Same great savings, zero maintenance.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="bg-white rounded-lg p-4 border border-gray-100">
-                  <div className="font-semibold text-green-600">50-85% Savings</div>
+                  <div className="font-semibold text-green-700">50-85% Savings</div>
                   <div className="text-gray-500">vs. premium services</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-100">
@@ -146,7 +147,7 @@ export default function LandingPage() {
                   <div className="text-gray-500">No server maintenance</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-100">
-                  <div className="font-semibold text-purple-600">API Compatible</div>
+                  <div className="font-semibold text-blue-600">API Compatible</div>
                   <div className="text-gray-500">Drop-in Resend replacement</div>
                 </div>
               </div>
@@ -170,8 +171,10 @@ export default function LandingPage() {
                   Migration is literally one line:
                 </span>
                 <button
+                  type="button"
                   onClick={copyCodeSnippet}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  aria-label={copiedCode ? "Copied" : "Copy code"}
+                  className="rounded p-1 text-gray-400 hover:text-white transition-colors"
                 >
                   {copiedCode ? (
                     <CheckCircle className="h-4 w-4" />
@@ -180,7 +183,7 @@ export default function LandingPage() {
                   )}
                 </button>
               </div>
-              <code className="text-green-400 font-mono text-sm block">
+              <code className="text-green-400 font-mono text-sm block break-all">
                 RESEND_BASE_URL=&quot;https://freeresend.com/api&quot;
               </code>
               <p className="text-gray-400 text-sm mt-2">
@@ -195,9 +198,9 @@ export default function LandingPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Why Choose FreeResend?
-            </h3>
+            </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Get all the benefits of premium email services without the premium
               price tag
@@ -206,12 +209,12 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <DollarSign className="h-8 w-8 text-white" />
               </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 85% Cost Savings
-              </h4>
+              </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Pay Amazon SES rates ($0.10/1k emails) instead of premium
                 pricing. Save hundreds annually across multiple projects.
@@ -223,7 +226,7 @@ export default function LandingPage() {
                 </div>
                 <Link
                   href="/pricing"
-                  className="inline-flex items-center space-x-1 text-green-600 hover:text-green-700 font-medium mt-2"
+                  className="inline-flex items-center space-x-1 text-green-700 hover:text-green-800 font-medium mt-2"
                 >
                   <span>Calculate your savings</span>
                   <ArrowRight className="h-3 w-3" />
@@ -232,12 +235,12 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Code className="h-8 w-8 text-white" />
               </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Drop-in Compatible
-              </h4>
+              </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 100% API compatibility with Resend. Zero code changes required -
                 just update your environment variable.
@@ -258,24 +261,24 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Zap className="h-8 w-8 text-white" />
               </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Lightning Setup
-              </h4>
+              </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Auto-creates DNS records with Digital Ocean. From domain to
                 sending emails in under 60 seconds.
               </p>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm">
-                <div className="font-semibold text-purple-800 mb-1">Even Faster:</div>
-                <div className="text-purple-700">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                <div className="font-semibold text-blue-800 mb-1">Even Faster:</div>
+                <div className="text-blue-700">
                   Hosted version = instant setup. No servers, no configuration.
                 </div>
                 <Link
                   href="/pricing"
-                  className="inline-flex items-center space-x-1 text-purple-600 hover:text-purple-700 font-medium mt-2"
+                  className="inline-flex items-center space-x-1 text-blue-600 hover:text-blue-700 font-medium mt-2"
                 >
                   <span>See hosted pricing</span>
                   <ArrowRight className="h-3 w-3" />
@@ -290,9 +293,9 @@ export default function LandingPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Everything You Need
-            </h3>
+            </h2>
             <p className="text-lg text-gray-600">
               Production-ready features for modern email infrastructure
             </p>
@@ -344,9 +347,9 @@ export default function LandingPage() {
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                   <div className="text-blue-600">{feature.icon}</div>
                 </div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {feature.title}
-                </h4>
+                </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
@@ -358,26 +361,26 @@ export default function LandingPage() {
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               FreeResend vs. Premium Services
-            </h3>
+            </h2>
             <p className="text-lg text-gray-600">
               Get the same features at a fraction of the cost
             </p>
           </div>
 
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Comparison table">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
                       Feature
                     </th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                       FreeResend
                     </th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                       Premium Services
                     </th>
                   </tr>
@@ -416,10 +419,10 @@ export default function LandingPage() {
                     },
                   ].map((row, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      <th scope="row" className="px-6 py-4 text-left text-sm font-medium text-gray-900">
                         {row.feature}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-center text-green-600 font-semibold">
+                      </th>
+                      <td className="px-6 py-4 text-sm text-center text-green-700 font-semibold">
                         {row.freeresend}
                       </td>
                       <td className="px-6 py-4 text-sm text-center text-gray-500">
@@ -435,12 +438,12 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+      <section className="py-20 bg-blue-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Take Control of Your Email Infrastructure?
-          </h3>
-          <p className="text-xl text-blue-100 mb-8">
+          </h2>
+          <p className="text-xl text-white mb-8">
             Join developers already saving money with FreeResend
           </p>
 
@@ -465,16 +468,18 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </main>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <EnvelopeIcon className="h-5 w-5 text-white" />
                 </div>
-                <h4 className="text-xl font-bold">FreeResend</h4>
+                <h3 className="text-xl font-bold">FreeResend</h3>
               </div>
               <p className="text-gray-400">
                 Open-source, self-hosted email service compatible with Resend.
@@ -482,7 +487,7 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <h5 className="font-semibold mb-4">Resources</h5>
+              <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
                   <a
@@ -512,7 +517,7 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <h5 className="font-semibold mb-4">Community</h5>
+              <h3 className="font-semibold mb-4">Community</h3>
               <ul className="space-y-2">
                 <li>
                   <a
@@ -542,7 +547,7 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <h5 className="font-semibold mb-4">Legal</h5>
+              <h3 className="font-semibold mb-4">Legal</h3>
               <ul className="space-y-2">
                 <li>
                   <a
@@ -569,7 +574,7 @@ export default function LandingPage() {
               Built by{" "}
               <a
                 href="https://x.com/eibrahim"
-                className="text-blue-400 hover:text-blue-300"
+                className="text-blue-400 underline hover:text-blue-300"
               >
                 @eibrahim
               </a>{" "}

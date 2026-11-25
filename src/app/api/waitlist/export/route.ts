@@ -1,6 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { exportWaitlistSignups, type WaitlistSignup } from "@/lib/database";
-import { handleError } from "@/lib/middleware";
+import { handleError, withAuth } from "@/lib/middleware";
+
+// The values come from a public form. A leading = + - @ would run as a formula in a spreadsheet.
+function cell(value: string | undefined): string {
+  if (!value) return "";
+  return `"${value.replace(/^(?=[=+\-@\t\r])/, "'").replace(/"/g, '""')}"`;
+}
 
 // Convert waitlist signups to CSV format
 function convertToCSV(signups: WaitlistSignup[]): string {
@@ -24,15 +30,15 @@ function convertToCSV(signups: WaitlistSignup[]): string {
     ...signups.map((signup) =>
       [
         signup.id,
-        `"${signup.email}"`,
+        cell(signup.email),
         signup.estimated_volume || "",
-        signup.current_provider ? `"${signup.current_provider}"` : "",
-        signup.referral_source ? `"${signup.referral_source}"` : "",
-        signup.user_agent ? `"${signup.user_agent.replace(/"/g, '""')}"` : "",
+        cell(signup.current_provider),
+        cell(signup.referral_source),
+        cell(signup.user_agent),
         signup.ip_address || "",
-        signup.utm_source ? `"${signup.utm_source}"` : "",
-        signup.utm_medium ? `"${signup.utm_medium}"` : "",
-        signup.utm_campaign ? `"${signup.utm_campaign}"` : "",
+        cell(signup.utm_source),
+        cell(signup.utm_medium),
+        cell(signup.utm_campaign),
         signup.created_at,
         signup.updated_at,
       ].join(",")
@@ -43,7 +49,7 @@ function convertToCSV(signups: WaitlistSignup[]): string {
 }
 
 // GET /api/waitlist/export - Export waitlist as CSV (admin only)
-export async function GET() {
+async function handleGet(): Promise<NextResponse> {
   try {
     // Get all waitlist signups
     const signups = await exportWaitlistSignups();
@@ -69,6 +75,10 @@ export async function GET() {
   } catch (error) {
     return handleError(error);
   }
+}
+
+export async function GET(req: NextRequest) {
+  return withAuth(handleGet)(req);
 }
 
 // Handle OPTIONS for CORS

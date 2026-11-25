@@ -6,8 +6,8 @@ import { getDomainById } from "@/lib/domains";
 
 const createApiKeySchema = z.object({
   domainId: z.string().uuid("Invalid domain ID"),
-  keyName: z.string().min(1, "Key name is required"),
-  permissions: z.array(z.string()).optional().default(["send"]),
+  keyName: z.string().min(1, "Key name is required").max(255),
+  permissions: z.array(z.enum(["send", "receive", "webhooks"])).max(3).optional().default(["send"]),
 });
 
 function cors(response: NextResponse) {

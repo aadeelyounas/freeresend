@@ -92,8 +92,7 @@ export async function POST(
     console.error("Error creating SMTP credentials:", error);
     return cors(NextResponse.json(
       {
-        error: "Failed to create SMTP credentials",
-        details: error instanceof Error ? error.message : String(error)
+        error: "Failed to create SMTP credentials"
       },
       { status: 500 }
     ));
@@ -161,8 +160,7 @@ export async function DELETE(
     console.error("Error deleting SMTP credentials:", error);
     return cors(NextResponse.json(
       {
-        error: "Failed to delete SMTP credentials",
-        details: error instanceof Error ? error.message : String(error)
+        error: "Failed to delete SMTP credentials"
       },
       { status: 500 }
     ));
