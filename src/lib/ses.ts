@@ -262,7 +262,7 @@ export function generateDNSRecords(
     {
       type: "MX",
       name: domain,
-      value: "10 inbound-smtp.us-east-1.amazonaws.com.", // Trailing dot required by Digital Ocean
+      value: `10 inbound-smtp.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com.`, // Trailing dot required by Digital Ocean
       ttl: 300,
       description: "SES Inbound Email",
     },
