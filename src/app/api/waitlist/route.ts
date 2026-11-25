@@ -8,6 +8,7 @@ import {
   type CreateWaitlistSignupData,
 } from "@/lib/database";
 import { handleError, withAuth } from "@/lib/middleware";
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { sendWaitlistNotification, sendWelcomeEmail } from "@/lib/notifications";
 
 // Validation schema for waitlist signup
@@ -23,9 +24,22 @@ const WaitlistSignupSchema = z.object({
 
 
 
+// Each signup stores an address and sends it an email, and anybody can post one.
+const HOUR_MS = 60 * 60 * 1000;
+const perAddress = createRateLimiter(5, HOUR_MS);
+const allSignups = createRateLimiter(30, HOUR_MS);
+
 // POST /api/waitlist - Add email to waitlist
 async function handlePost(req: NextRequest): Promise<NextResponse> {
   try {
+    const wait = perAddress.take(clientIp(req.headers)) || allSignups.take("all");
+    if (wait) {
+      return NextResponse.json(
+        { success: false, message: "Too many signups. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(wait) } }
+      );
+    }
+
     // Parse and validate request body
     const body = await req.json();
     const validationResult = WaitlistSignupSchema.safeParse(body);
